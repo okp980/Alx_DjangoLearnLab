@@ -6,7 +6,8 @@ books = Book.objects.filter(author=author)
 print(books)
 
 # 2. Get all libraries that have a specific book
-library = Library.objects.get(name="Central Library")
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
 books = Book.objects.filter(library=library)
 print(books)
 

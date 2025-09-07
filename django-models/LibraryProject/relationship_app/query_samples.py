@@ -1,20 +1,15 @@
 from .models import Author, Book, Library, Librarian
 
-# 1. Get all books by an author
-author = Author.objects.get(name="J.K. Rowling")
-books = Book.objects.filter(author=author)
-print(books)
-
-# 2. Get all libraries that have a specific book
+# 1. List all books in Library
 library_name = "Central Library"
 library = Library.objects.get(name=library_name)
-books = Book.objects.filter(library=library)
-print(books)
+library.books.all()
 
-# 3. Get all librarians that work in a specific library
+# 2. Query all books by a specific author
+author_name = "J.K. Rowling"
+author = Author.objects.get(name=author_name)
+books = Book.objects.filter(author=author)
+
+# 3. Retrieve the librarian for a library
 librarian = Librarian.objects.get(library=library)
-print(librarian)
 
-# 4. Get all books that are in a specific library
-books = Book.objects.filter(library=library)
-print(books)

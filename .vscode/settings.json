@@ -1,0 +1,17 @@
+{
+  // Use Pylance for IntelliSense
+  "python.languageServer": "Pylance",
+
+  // Make completions richer
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.typeCheckingMode": "basic", // try "strict" later if you like
+
+  // If you use a `src/` layout or monorepo, add import roots:
+  // "python.analysis.extraPaths": ["./src"],
+
+  // Templates: treat Django templates as django-html
+  "files.associations": {
+    "**/templates/**/*.html": "django-html"
+  }
+}

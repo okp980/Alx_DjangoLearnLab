@@ -1,27 +1,28 @@
 from django.contrib import admin
-from .models import Genre, Book, BookInstance, Author
+from .models import Genre, Book, BookInstance, Author, Language
 
 # Register your models here.
 
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    pass
+class BookInline(admin.TabularInline):
+    model = Book
+    extra = 0
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
+    fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
+    inlines = [BookInline]
+class BooksInstanceInline(admin.TabularInline):
+    model = BookInstance
+    extra = 0
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'display_genre')
-    list_filter = ('genre', 'author')
-    search_fields = ('title', 'author__first_name', 'author__last_name')
+    list_display = ('author', 'display_genre')
 
-    def display_genre(self, obj):
-        """Create a string for the Genre. This is required to display genre in Admin."""
-        return ', '.join(genre.name for genre in obj.genre.all()[:3])
-
-    display_genre.short_description = 'Genre'
-
+    inlines = [BooksInstanceInline]
 @admin.register(BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'book', 'status', 'due_back')
+    list_display = ('id','book', 'status', 'due_back')
     list_filter = ('status', 'due_back')
     fieldsets = (
         (None, {
@@ -32,9 +33,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
-    list_filter = ('date_of_birth', 'date_of_death')
-    search_fields = ('first_name', 'last_name')
-    fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
+
+
+admin.site.register(Genre)
+admin.site.register(Language)

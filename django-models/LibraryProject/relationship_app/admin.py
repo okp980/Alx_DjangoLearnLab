@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Library, Librarian
+from .models import Book, Library, Librarian, UserProfile
 
 # Register your models here.
 
@@ -14,3 +14,7 @@ class LibraryAdmin(admin.ModelAdmin):
 @admin.register(Librarian)
 class LibrarianAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', )
+    
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'role')

@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+# from . import signals
 # Create your models here.
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -30,6 +31,16 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
     
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLE_STATUS = (
+        ('admin', 'Admin'),
+        ('librarian', 'Librarian'),
+        ('member', 'Member'),
+    )
+    role = models.CharField(max_length=100, choices=ROLE_STATUS, default='member')
     
+    def __str__(self):
+        return self.user.username
 
     

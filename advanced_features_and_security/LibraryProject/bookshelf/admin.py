@@ -3,7 +3,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from .models import CustomUser, Book
 
-@admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin):
     """
     Custom admin interface for the CustomUser model.
@@ -42,7 +41,6 @@ class CustomUserAdmin(BaseUserAdmin):
         return "No photo"
     profile_photo_preview.short_description = "Profile Photo"
 
-@admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     # Display fields in the list view
     list_display = ('title', 'author', 'publication_year', 'borrower')
@@ -78,3 +76,7 @@ class BookAdmin(admin.ModelAdmin):
         recent_count = queryset.filter(publication_year__gte=current_year-5).count()
         self.message_user(request, f'{recent_count} books are already recent (published in last 5 years).')
     mark_as_recent.short_description = "Check for recent publications"
+
+# Register the models with the custom admin classes
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Book, BookAdmin)

@@ -143,6 +143,11 @@ SECURE_HSTS_SECONDS = 31536000  # HTTP Strict Transport Security for 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include all subdomains in HSTS policy
 SECURE_HSTS_PRELOAD = True  # Allow HSTS preloading for enhanced security
 
+# SECURITY: Proxy SSL Header Configuration
+# Required when deploying behind a reverse proxy (Nginx/Apache)
+# This tells Django to trust the proxy's SSL headers
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # SECURITY: Cookie Security
 # Force cookies to be sent only over HTTPS connections
 CSRF_COOKIE_SECURE = True  # CSRF cookies only transmitted over HTTPS

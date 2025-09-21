@@ -45,7 +45,7 @@ Both methods properly handle the email-based authentication system.
 ### 3. Settings Configuration (`settings.py`)
 
 ```python
-AUTH_USER_MODEL = 'relationship_app.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Media files configuration
 MEDIA_URL = '/media/'
@@ -141,7 +141,7 @@ When implementing a custom user model:
 ## File Structure
 
 ```
-relationship_app/
+bookshelf/
 ├── models.py              # Custom user model and manager
 ├── admin.py               # Admin interface configuration
 ├── management/

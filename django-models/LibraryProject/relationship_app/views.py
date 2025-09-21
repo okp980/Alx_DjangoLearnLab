@@ -30,4 +30,4 @@ def register(request):
             return HttpResponseRedirect(reverse('login'))
     else:
         form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})

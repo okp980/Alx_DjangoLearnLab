@@ -18,6 +18,6 @@ urlpatterns = [
     
     # Book-related views
     path('add_book/', views.add_book, name='add_book'),
-    path('change_book/<int:pk>/', views.change_book, name='change_book'),
+    path('edit_book/<int:pk>/', views.change_book, name='change_book'),
     path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
 ]

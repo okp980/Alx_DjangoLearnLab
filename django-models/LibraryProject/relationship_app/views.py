@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from .models import Library, Book, UserProfile
 from django.views.generic.detail import DetailView
+from django.views.generic import TemplateView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
@@ -59,51 +61,63 @@ def is_member(user):
     except UserProfile.DoesNotExist:
         return False
 
-# Role-based views
-@user_passes_test(is_admin)
-def admin_view(request):
-    """Admin-only view for managing the entire system"""
-    context = {
-        'user_role': 'Admin',
-        'message': 'Welcome to the Admin Dashboard! You have full system access.',
-        'available_actions': [
-            'Manage all users',
-            'Configure system settings',
-            'View system logs',
-            'Manage libraries and books',
-            'Assign user roles'
-        ]
-    }
-    return render(request, 'relationship_app/admin_view.html', context)
+# Role-based class views
+@method_decorator(user_passes_test(is_admin), name='dispatch')
+class Admin(TemplateView):
+    """Admin-only class view for managing the entire system"""
+    template_name = 'relationship_app/admin_view.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'user_role': 'Admin',
+            'message': 'Welcome to the Admin Dashboard! You have full system access.',
+            'available_actions': [
+                'Manage all users',
+                'Configure system settings',
+                'View system logs',
+                'Manage libraries and books',
+                'Assign user roles'
+            ]
+        })
+        return context
 
-@user_passes_test(is_librarian)
-def librarian_view(request):
-    """Librarian-only view for managing library operations"""
-    context = {
-        'user_role': 'Librarian',
-        'message': 'Welcome to the Librarian Dashboard! You can manage library operations.',
-        'available_actions': [
-            'Manage books and authors',
-            'Handle book loans',
-            'View member information',
-            'Generate library reports',
-            'Manage library inventory'
-        ]
-    }
-    return render(request, 'relationship_app/librarian_view.html', context)
+@method_decorator(user_passes_test(is_librarian), name='dispatch')
+class Librarian(TemplateView):
+    """Librarian-only class view for managing library operations"""
+    template_name = 'relationship_app/librarian_view.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'user_role': 'Librarian',
+            'message': 'Welcome to the Librarian Dashboard! You can manage library operations.',
+            'available_actions': [
+                'Manage books and authors',
+                'Handle book loans',
+                'View member information',
+                'Generate library reports',
+                'Manage library inventory'
+            ]
+        })
+        return context
 
-@user_passes_test(is_member)
-def member_view(request):
-    """Member-only view for library users"""
-    context = {
-        'user_role': 'Member',
-        'message': 'Welcome to the Member Dashboard! You can browse and borrow books.',
-        'available_actions': [
-            'Browse available books',
-            'View borrowing history',
-            'Request book loans',
-            'Update personal information',
-            'View library announcements'
-        ]
-    }
-    return render(request, 'relationship_app/member_view.html', context)
+@method_decorator(user_passes_test(is_member), name='dispatch')
+class Member(TemplateView):
+    """Member-only class view for library users"""
+    template_name = 'relationship_app/member_view.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'user_role': 'Member',
+            'message': 'Welcome to the Member Dashboard! You can browse and borrow books.',
+            'available_actions': [
+                'Browse available books',
+                'View borrowing history',
+                'Request book loans',
+                'Update personal information',
+                'View library announcements'
+            ]
+        })
+        return context

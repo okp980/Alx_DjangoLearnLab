@@ -11,7 +11,9 @@ from django.db import IntegrityError
 from django.utils.html import escape
 import logging
 from .models import Book, CustomUser
-from .forms import BookForm, ExampleForm
+from .forms import BookForm
+from .forms import ExampleForm
+
 
 # Create your views here.
 

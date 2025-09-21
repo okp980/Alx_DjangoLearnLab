@@ -8,12 +8,43 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
+from .forms import BookForm
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
+
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('list_books'))
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/add_book.html', {'form': form})
+
+@permission_required('relationship_app.can_change_book')
+def change_book(request, pk):
+    book = Book.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('list_books'))
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/change_book.html', {'form': form})
+
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request, pk):
+    book = Book.objects.get(pk=pk)
+    book.delete()
+    return HttpResponseRedirect(reverse('list_books'))
 
 class LibraryDetailView(DetailView):
     model = Library

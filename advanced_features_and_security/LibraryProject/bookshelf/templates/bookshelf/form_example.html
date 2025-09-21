@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SECURITY: Additional security meta tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <title>Bookshelf - Example Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+        margin: 20px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+      }
+      .form-check {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+      }
+      .form-check-input {
+        margin-right: 10px;
+      }
+      .form-check-label {
+        margin-bottom: 0;
+      }
+      .btn {
+        padding: 12px 24px;
+        margin: 10px 5px;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+      .btn-secondary:hover {
+        background-color: #545b62;
+      }
+      .error {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+      }
+      .help-text {
+        color: #6c757d;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+      }
+      .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+        border: 1px solid transparent;
+      }
+      .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+        border-left: 4px solid #007bff;
+      }
+      .form-section h3 {
+        margin-top: 0;
+        color: #007bff;
+      }
+      .file-upload {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        border-radius: 4px;
+        background-color: #fafafa;
+      }
+      .file-upload:hover {
+        border-color: #007bff;
+        background-color: #f0f8ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📝 Example Form Demo</h1>
+      <p>
+        This form demonstrates various Django form fields and security features.
+      </p>
+
+      <!-- SECURITY: Display messages -->
+      {% if messages %} {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %} {% endif %}
+
+      <!-- SECURITY: Form with CSRF protection -->
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h3>📖 Basic Information</h3>
+
+          <div class="form-group">
+            <label for="{{ form.title.id_for_label }}"
+              >{{ form.title.label }}</label
+            >
+            {{ form.title }} {% if form.title.help_text %}
+            <span class="help-text">{{ form.title.help_text }}</span>
+            {% endif %} {% if form.title.errors %} {% for error in
+            form.title.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.author.id_for_label }}"
+              >{{ form.author.label }}</label
+            >
+            {{ form.author }} {% if form.author.help_text %}
+            <span class="help-text">{{ form.author.help_text }}</span>
+            {% endif %} {% if form.author.errors %} {% for error in
+            form.author.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.contact_email.id_for_label }}"
+              >{{ form.contact_email.label }}</label
+            >
+            {{ form.contact_email }} {% if form.contact_email.help_text %}
+            <span class="help-text">{{ form.contact_email.help_text }}</span>
+            {% endif %} {% if form.contact_email.errors %} {% for error in
+            form.contact_email.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+        <!-- Book Details Section -->
+        <div class="form-section">
+          <h3>📚 Book Details</h3>
+
+          <div class="form-group">
+            <label for="{{ form.publication_year.id_for_label }}"
+              >{{ form.publication_year.label }}</label
+            >
+            {{ form.publication_year }} {% if form.publication_year.help_text %}
+            <span class="help-text">{{ form.publication_year.help_text }}</span>
+            {% endif %} {% if form.publication_year.errors %} {% for error in
+            form.publication_year.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.genre.id_for_label }}"
+              >{{ form.genre.label }}</label
+            >
+            {{ form.genre }} {% if form.genre.help_text %}
+            <span class="help-text">{{ form.genre.help_text }}</span>
+            {% endif %} {% if form.genre.errors %} {% for error in
+            form.genre.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.description.id_for_label }}"
+              >{{ form.description.label }}</label
+            >
+            {{ form.description }} {% if form.description.help_text %}
+            <span class="help-text">{{ form.description.help_text }}</span>
+            {% endif %} {% if form.description.errors %} {% for error in
+            form.description.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+        <!-- Availability Section -->
+        <div class="form-section">
+          <h3>📅 Availability</h3>
+
+          <div class="form-group">
+            <label for="{{ form.availability_date.id_for_label }}"
+              >{{ form.availability_date.label }}</label
+            >
+            {{ form.availability_date }} {% if form.availability_date.help_text
+            %}
+            <span class="help-text"
+              >{{ form.availability_date.help_text }}</span
+            >
+            {% endif %} {% if form.availability_date.errors %} {% for error in
+            form.availability_date.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+
+          <div class="form-check">
+            {{ form.is_featured }}
+            <label
+              for="{{ form.is_featured.id_for_label }}"
+              class="form-check-label"
+            >
+              {{ form.is_featured.label }}
+            </label>
+            {% if form.is_featured.help_text %}
+            <span class="help-text">{{ form.is_featured.help_text }}</span>
+            {% endif %} {% if form.is_featured.errors %} {% for error in
+            form.is_featured.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="form-section">
+          <h3>🖼️ Cover Image</h3>
+
+          <div class="form-group">
+            <label for="{{ form.cover_image.id_for_label }}"
+              >{{ form.cover_image.label }}</label
+            >
+            <div class="file-upload">{{ form.cover_image }}</div>
+            {% if form.cover_image.help_text %}
+            <span class="help-text">{{ form.cover_image.help_text }}</span>
+            {% endif %} {% if form.cover_image.errors %} {% for error in
+            form.cover_image.errors %}
+            <span class="error">{{ error }}</span>
+            {% endfor %} {% endif %}
+          </div>
+        </div>
+
+        <!-- Form-wide errors -->
+        {% if form.non_field_errors %}
+        <div class="alert alert-error">
+          <strong>Form Errors:</strong>
+          <ul>
+            {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Submit Buttons -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit Form</button>
+          <a href="{% url 'bookshelf:book_list' %}" class="btn btn-secondary"
+            >Cancel</a
+          >
+        </div>
+      </form>
+
+      <!-- Security Information -->
+      <div class="form-section">
+        <h3>🔒 Security Features Demonstrated</h3>
+        <ul>
+          <li><strong>CSRF Protection:</strong> Form includes CSRF token</li>
+          <li>
+            <strong>XSS Prevention:</strong> All inputs are automatically
+            escaped
+          </li>
+          <li>
+            <strong>Input Validation:</strong> Client and server-side validation
+          </li>
+          <li>
+            <strong>File Upload Security:</strong> Type and size restrictions
+          </li>
+          <li>
+            <strong>Input Sanitization:</strong> Prohibited word filtering
+          </li>
+          <li>
+            <strong>Security Headers:</strong> X-Frame-Options,
+            X-Content-Type-Options
+          </li>
+        </ul>
+      </div>
+
+      <!-- Form Field Information -->
+      <div class="form-section">
+        <h3>📋 Form Fields Included</h3>
+        <ul>
+          <li>
+            <strong>CharField:</strong> Title and Author (with length
+            validation)
+          </li>
+          <li>
+            <strong>EmailField:</strong> Contact Email (with format validation)
+          </li>
+          <li>
+            <strong>IntegerField:</strong> Publication Year (with range
+            validation)
+          </li>
+          <li><strong>ChoiceField:</strong> Genre selection dropdown</li>
+          <li><strong>Textarea:</strong> Description (multi-line text)</li>
+          <li><strong>BooleanField:</strong> Featured book checkbox</li>
+          <li><strong>DateField:</strong> Availability date picker</li>
+          <li><strong>ImageField:</strong> Cover image upload</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECURITY: Client-side validation script -->
+    <script>
+      // SECURITY: Client-side form validation
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form")
+        const titleInput = document.getElementById("id_title")
+        const authorInput = document.getElementById("id_author")
+        const yearInput = document.getElementById("id_publication_year")
+        const fileInput = document.getElementById("id_cover_image")
+
+        // Real-time validation
+        if (titleInput) {
+          titleInput.addEventListener("input", function () {
+            const value = this.value.trim()
+            if (value.length < 2 && value.length > 0) {
+              this.setCustomValidity(
+                "Title must be at least 2 characters long."
+              )
+            } else {
+              this.setCustomValidity("")
+            }
+          })
+        }
+
+        if (yearInput) {
+          yearInput.addEventListener("input", function () {
+            const value = parseInt(this.value)
+            if (value < 1000 || value > 2024) {
+              this.setCustomValidity("Year must be between 1000 and 2024.")
+            } else {
+              this.setCustomValidity("")
+            }
+          })
+        }
+
+        if (fileInput) {
+          fileInput.addEventListener("change", function () {
+            const file = this.files[0]
+            if (file) {
+              // Check file size (5MB limit)
+              if (file.size > 5 * 1024 * 1024) {
+                this.setCustomValidity("File size cannot exceed 5MB.")
+              } else {
+                this.setCustomValidity("")
+              }
+            }
+          })
+        }
+
+        // Form submission validation
+        form.addEventListener("submit", function (e) {
+          let isValid = true
+
+          // Check required fields
+          const requiredFields = [titleInput, authorInput, yearInput]
+          requiredFields.forEach((field) => {
+            if (field && !field.value.trim()) {
+              field.setCustomValidity("This field is required.")
+              isValid = false
+            }
+          })
+
+          if (!isValid) {
+            e.preventDefault()
+            alert("Please fill in all required fields correctly.")
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

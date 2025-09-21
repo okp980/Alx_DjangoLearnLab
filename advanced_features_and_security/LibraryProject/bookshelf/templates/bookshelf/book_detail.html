@@ -61,7 +61,7 @@
     </div>
 
     <div class="actions">
-      <a href="{% url 'bookshelf:list_books' %}" class="btn btn-secondary"
+      <a href="{% url 'bookshelf:book_list' %}" class="btn btn-secondary"
         >Back to Book List</a
       >
       {% if perms.bookshelf.can_edit %}

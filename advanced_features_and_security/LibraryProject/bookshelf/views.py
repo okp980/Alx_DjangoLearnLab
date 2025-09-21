@@ -10,10 +10,15 @@ from .forms import BookForm
 # Create your views here.
 
 @permission_required('bookshelf.can_view', raise_exception=True)
-def list_books(request):
+def book_list(request):
     """View to list all books - requires can_view permission"""
     books = Book.objects.all()
     return render(request, 'bookshelf/list_books.html', {'books': books})
+
+@permission_required('bookshelf.can_view', raise_exception=True)
+def list_books(request):
+    """View to list all books - requires can_view permission (alias for book_list)"""
+    return book_list(request)
 
 @permission_required('bookshelf.can_create', raise_exception=True)
 def add_book(request):
@@ -23,7 +28,7 @@ def add_book(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book added successfully!')
-            return HttpResponseRedirect(reverse('list_books'))
+            return HttpResponseRedirect(reverse('bookshelf:book_list'))
     else:
         form = BookForm()
     return render(request, 'bookshelf/add_book.html', {'form': form})
@@ -37,7 +42,7 @@ def edit_book(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book updated successfully!')
-            return HttpResponseRedirect(reverse('list_books'))
+            return HttpResponseRedirect(reverse('bookshelf:book_list'))
     else:
         form = BookForm(instance=book)
     return render(request, 'bookshelf/edit_book.html', {'form': form, 'book': book})

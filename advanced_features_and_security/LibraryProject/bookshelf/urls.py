@@ -5,8 +5,9 @@ app_name = 'bookshelf'
 
 urlpatterns = [
     # Book management views with permission requirements
-    path('', views.list_books, name='list_books'),
-    path('books/', views.list_books, name='list_books'),
+    path('', views.book_list, name='book_list'),
+    path('books/', views.book_list, name='book_list'),
+    path('book-list/', views.book_list, name='list_books'),  # Alias for backward compatibility
     path('books/add/', views.add_book, name='add_book'),
     path('books/<int:pk>/', views.book_detail, name='book_detail'),
     path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),

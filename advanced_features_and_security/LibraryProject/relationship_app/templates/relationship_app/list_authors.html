@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Authors List</title>
+  </head>
+  <body>
+    <h1>Authors</h1>
+    <p><a href="{% url 'add_author' %}">Add New Author</a></p>
+
+    {% if authors %}
+    <ul>
+      {% for author in authors %}
+      <li>
+        {{ author.name }}
+        <a href="{% url 'change_author' author.pk %}">Edit</a>
+        <a href="{% url 'delete_author' author.pk %}">Delete</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No authors available.</p>
+    {% endif %}
+
+    <p><a href="{% url 'list_books' %}">Back to Books</a></p>
+  </body>
+</html>

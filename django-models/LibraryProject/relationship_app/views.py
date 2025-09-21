@@ -63,7 +63,7 @@ def is_member(user):
 
 # Role-based class views
 @method_decorator(user_passes_test(is_admin), name='dispatch')
-class Admin(TemplateView):
+class AdminView(TemplateView):
     """Admin-only class view for managing the entire system"""
     template_name = 'relationship_app/admin_view.html'
     
@@ -83,7 +83,7 @@ class Admin(TemplateView):
         return context
 
 @method_decorator(user_passes_test(is_librarian), name='dispatch')
-class Librarian(TemplateView):
+class LibrarianView(TemplateView):
     """Librarian-only class view for managing library operations"""
     template_name = 'relationship_app/librarian_view.html'
     
@@ -103,7 +103,7 @@ class Librarian(TemplateView):
         return context
 
 @method_decorator(user_passes_test(is_member), name='dispatch')
-class Member(TemplateView):
+class MemberView(TemplateView):
     """Member-only class view for library users"""
     template_name = 'relationship_app/member_view.html'
     

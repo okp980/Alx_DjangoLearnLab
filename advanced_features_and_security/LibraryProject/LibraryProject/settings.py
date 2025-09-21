@@ -137,16 +137,16 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 # =============================================================================
 
 # SECURITY: HTTPS and SSL Configuration
-# These settings should be True in production with HTTPS
-SECURE_SSL_REDIRECT = False  # Set to True in production with HTTPS
-SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # HTTP Strict Transport Security
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# These settings enforce HTTPS connections for enhanced security
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # HTTP Strict Transport Security for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include all subdomains in HSTS policy
+SECURE_HSTS_PRELOAD = True  # Allow HSTS preloading for enhanced security
 
 # SECURITY: Cookie Security
-# Force cookies to be sent only over HTTPS in production
-CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
-SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+# Force cookies to be sent only over HTTPS connections
+CSRF_COOKIE_SECURE = True  # CSRF cookies only transmitted over HTTPS
+SESSION_COOKIE_SECURE = True  # Session cookies only transmitted over HTTPS
 CSRF_COOKIE_HTTPONLY = True  # Prevent XSS attacks on CSRF cookies
 SESSION_COOKIE_HTTPONLY = True  # Prevent XSS attacks on session cookies
 CSRF_COOKIE_SAMESITE = 'Strict'  # CSRF protection
@@ -192,7 +192,12 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # SECURITY: CSRF Protection
 CSRF_COOKIE_AGE = 31449600  # 1 year
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']  # Add production URLs
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost:8000', 
+    'https://127.0.0.1:8000',
+    'https://yourdomain.com',  # Replace with your production domain
+    'https://www.yourdomain.com'  # Replace with your production domain
+]
 
 # SECURITY: Database Security (SQLite specific)
 # Note: In production, use PostgreSQL or MySQL with proper encryption

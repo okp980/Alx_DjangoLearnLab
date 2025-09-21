@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SECURITY: Additional security meta tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
     <title>Bookshelf - Book List</title>
     <style>
       body {
@@ -82,7 +86,30 @@
         >Add New Book</a
       >
     </div>
-    {% endif %} {% if books %}
+    {% endif %}
+
+    <!-- SECURITY: Search functionality with CSRF protection -->
+    <div class="search-section">
+      <h3>Search Books</h3>
+      <form method="get" action="{% url 'bookshelf:book_list' %}">
+        {% csrf_token %}
+        <input
+          type="text"
+          name="search"
+          placeholder="Search by title or author..."
+          value="{{ search_query|default:'' }}"
+          maxlength="100"
+        />
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if search_query %}
+        <a href="{% url 'bookshelf:book_list' %}" class="btn btn-secondary"
+          >Clear</a
+        >
+        {% endif %}
+      </form>
+    </div>
+
+    {% if books %}
     <h2>Available Books ({{ books.count }})</h2>
     {% for book in books %}
     <div class="book-item">

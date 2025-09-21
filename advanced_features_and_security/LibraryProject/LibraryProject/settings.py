@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-r+)&jqg8o+l*9w0gq@=+(9*z&l@_3v(m*3iq6*+jz8=_rgdxi='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY: Set DEBUG to False in production for security
+DEBUG = True  # Change to False in production
 
-ALLOWED_HOSTS = []
+# SECURITY: Configure allowed hosts for production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Add your production domain here
 
 
 # Application definition
@@ -49,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # SECURITY: Custom security middleware for CSP headers
+    'bookshelf.middleware.SecurityHeadersMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -127,3 +131,116 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# =============================================================================
+# SECURITY SETTINGS - Production Security Configuration
+# =============================================================================
+
+# SECURITY: HTTPS and SSL Configuration
+# These settings should be True in production with HTTPS
+SECURE_SSL_REDIRECT = False  # Set to True in production with HTTPS
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # HTTP Strict Transport Security
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# SECURITY: Cookie Security
+# Force cookies to be sent only over HTTPS in production
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_HTTPONLY = True  # Prevent XSS attacks on CSRF cookies
+SESSION_COOKIE_HTTPONLY = True  # Prevent XSS attacks on session cookies
+CSRF_COOKIE_SAMESITE = 'Strict'  # CSRF protection
+SESSION_COOKIE_SAMESITE = 'Strict'  # Session protection
+
+# SECURITY: Browser-side Security Headers
+SECURE_BROWSER_XSS_FILTER = True  # Enable XSS filtering in browsers
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type sniffing
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking attacks
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# SECURITY: Additional Security Headers
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+
+# SECURITY: Content Security Policy (CSP)
+# Basic CSP configuration to prevent XSS attacks
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")  # Allow inline scripts for Django admin
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # Allow inline styles
+CSP_IMG_SRC = ("'self'", "data:", "https:")
+CSP_FONT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_ANCESTORS = ("'none'",)  # Prevent embedding in frames
+CSP_BASE_URI = ("'self'",)
+CSP_OBJECT_SRC = ("'none'",)
+
+# SECURITY: File Upload Security
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
+
+# SECURITY: Password Security (already configured but documented)
+# The following validators are already configured above:
+# - UserAttributeSimilarityValidator: Prevents passwords similar to user info
+# - MinimumLengthValidator: Enforces minimum password length
+# - CommonPasswordValidator: Prevents common passwords
+# - NumericPasswordValidator: Prevents purely numeric passwords
+
+# SECURITY: Session Security
+SESSION_COOKIE_AGE = 3600  # 1 hour session timeout
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True
+
+# SECURITY: CSRF Protection
+CSRF_COOKIE_AGE = 31449600  # 1 year
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']  # Add production URLs
+
+# SECURITY: Database Security (SQLite specific)
+# Note: In production, use PostgreSQL or MySQL with proper encryption
+DATABASES['default']['OPTIONS'] = {
+    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+} if DATABASES['default']['ENGINE'] != 'django.db.backends.sqlite3' else {}
+
+# SECURITY: Logging Configuration for Security Events
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django_security.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django.security': {
+            'handlers': ['file', 'console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file', 'console'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
+
+# Create logs directory if it doesn't exist
+import os
+os.makedirs(BASE_DIR / 'logs', exist_ok=True)

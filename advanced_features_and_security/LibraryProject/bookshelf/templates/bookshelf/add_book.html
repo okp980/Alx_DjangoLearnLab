@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookshelf - Add Book</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .form-group {
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .btn {
+        padding: 10px 20px;
+        margin: 5px;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        color: white;
+      }
+      .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📚 Add New Book</h1>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.title.id_for_label }}"
+          >{{ form.title.label }}</label
+        >
+        {{ form.title }} {% if form.title.errors %}
+        <div class="error">{{ form.title.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.author.id_for_label }}"
+          >{{ form.author.label }}</label
+        >
+        {{ form.author }} {% if form.author.errors %}
+        <div class="error">{{ form.author.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.publication_year.id_for_label }}"
+          >{{ form.publication_year.label }}</label
+        >
+        {{ form.publication_year }} {% if form.publication_year.errors %}
+        <div class="error">{{ form.publication_year.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.borrower.id_for_label }}"
+          >{{ form.borrower.label }}</label
+        >
+        {{ form.borrower }} {% if form.borrower.errors %}
+        <div class="error">{{ form.borrower.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Book</button>
+        <a href="{% url 'bookshelf:list_books' %}" class="btn btn-secondary"
+          >Cancel</a
+        >
+      </div>
+    </form>
+  </body>
+</html>

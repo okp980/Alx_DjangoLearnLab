@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from relationship_app.models import UserProfile
+from bookshelf.models import CustomUser
 
 User = get_user_model()
 
@@ -14,30 +14,27 @@ class Command(BaseCommand):
         test_users = [
             {
                 'username': 'viewer_user',
-                'email': 'viewer@example.com',
+                'email': 'viewer@bookshelf.com',
                 'password': 'testpass123',
                 'group': 'Viewers',
-                'role': 'member'
             },
             {
                 'username': 'editor_user',
-                'email': 'editor@example.com',
+                'email': 'editor@bookshelf.com',
                 'password': 'testpass123',
                 'group': 'Editors',
-                'role': 'librarian'
             },
             {
                 'username': 'admin_user',
-                'email': 'admin@example.com',
+                'email': 'admin@bookshelf.com',
                 'password': 'testpass123',
                 'group': 'Admins',
-                'role': 'admin'
             }
         ]
         
         for user_data in test_users:
-            # Create or get user
-            user, created = User.objects.get_or_create(
+            # Create or get user using CustomUser model
+            user, created = CustomUser.objects.get_or_create(
                 username=user_data['username'],
                 defaults={
                     'email': user_data['email'],
@@ -65,19 +62,6 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.ERROR(f'  Group not found: {user_data["group"]}')
                 )
-            
-            # Create or update user profile
-            user_profile, profile_created = UserProfile.objects.get_or_create(
-                user=user,
-                defaults={'role': user_data['role']}
-            )
-            
-            if profile_created:
-                self.stdout.write(f'  Created profile with role: {user_data["role"]}')
-            else:
-                user_profile.role = user_data['role']
-                user_profile.save()
-                self.stdout.write(f'  Updated profile role to: {user_data["role"]}')
             
             self.stdout.write('')
         

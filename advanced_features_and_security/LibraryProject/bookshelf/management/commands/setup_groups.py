@@ -1,52 +1,42 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
-from relationship_app.models import Book, Author
+from bookshelf.models import Book
 
 
 class Command(BaseCommand):
-    help = 'Create user groups and assign permissions'
+    help = 'Create user groups and assign permissions for bookshelf app'
 
     def handle(self, *args, **options):
-        # Get content types for our models
+        # Get content type for Book model
         book_content_type = ContentType.objects.get_for_model(Book)
-        author_content_type = ContentType.objects.get_for_model(Author)
         
-        # Get all permissions for Book and Author models
+        # Get all permissions for Book model
         book_permissions = Permission.objects.filter(content_type=book_content_type)
-        author_permissions = Permission.objects.filter(content_type=author_content_type)
         
         # Create Groups
         groups_data = {
             'Viewers': {
-                'description': 'Users who can only view books and authors',
+                'description': 'Users who can only view books',
                 'permissions': [
-                    'relationship_app.can_view_book',
-                    'relationship_app.can_view_author',
+                    'bookshelf.can_view',
                 ]
             },
             'Editors': {
-                'description': 'Users who can view, create, and edit books and authors',
+                'description': 'Users who can view, create, and edit books',
                 'permissions': [
-                    'relationship_app.can_view_book',
-                    'relationship_app.can_create_book',
-                    'relationship_app.can_edit_book',
-                    'relationship_app.can_view_author',
-                    'relationship_app.can_create_author',
-                    'relationship_app.can_edit_author',
+                    'bookshelf.can_view',
+                    'bookshelf.can_create',
+                    'bookshelf.can_edit',
                 ]
             },
             'Admins': {
                 'description': 'Users who have full access including delete permissions',
                 'permissions': [
-                    'relationship_app.can_view_book',
-                    'relationship_app.can_create_book',
-                    'relationship_app.can_edit_book',
-                    'relationship_app.can_delete_book',
-                    'relationship_app.can_view_author',
-                    'relationship_app.can_create_author',
-                    'relationship_app.can_edit_author',
-                    'relationship_app.can_delete_author',
+                    'bookshelf.can_view',
+                    'bookshelf.can_create',
+                    'bookshelf.can_edit',
+                    'bookshelf.can_delete',
                 ]
             }
         }

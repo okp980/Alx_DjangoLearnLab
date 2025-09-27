@@ -3,7 +3,7 @@ from rest_framework import generics, permissions, viewsets
 from api.models import Book, Author
 from api.serializers import BookSerializer, AuthorSerializer
 from rest_framework import filters
-from rest_framework import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.

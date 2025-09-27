@@ -8,7 +8,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('books/', ListView.as_view(), name='book-list'),
     path('books/<int:pk>/', DetailView.as_view(), name='book-detail'),
-    path('books/', CreateView.as_view(), name='book-create'),
-    path('books/<int:pk>/', UpdateView.as_view(), name='book-update'),
-    path('books/<int:pk>/', DeleteView.as_view(), name='book-delete'),
+    path('books/create', CreateView.as_view(), name='book-create'),
+    path('books/update/<int:pk>/', UpdateView.as_view(), name='book-update'),
+    path('books/delete/<int:pk>/', DeleteView.as_view(), name='book-delete'),
 ]

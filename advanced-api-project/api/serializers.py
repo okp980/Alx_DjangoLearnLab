@@ -4,19 +4,7 @@ from api.models import Author, Book
 
 """ Serializers are used to convert model instances to JSON so that the frontend can work with the data. """
 
-class AuthorSerializer(serializers.ModelSerializer):
-    """ Serializer for the Author model 
-    
-    Args:
-        serializers.ModelSerializer: The base class for model serializers.
-        
-    Attributes:
-        model: The model that the serializer is based on.
-        fields: The fields that the serializer will serialize.
-    """
-    class Meta:
-        model = Author
-        fields = ['id', 'name']
+
         
         
 class BookSerializer(serializers.ModelSerializer):
@@ -40,3 +28,18 @@ class BookSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Publication year must be between 1000 and 2024")
         return attrs
         
+        
+class AuthorSerializer(serializers.ModelSerializer):
+    """ Serializer for the Author model 
+    
+    Args:
+        serializers.ModelSerializer: The base class for model serializers.
+        
+    Attributes:
+        model: The model that the serializer is based on.
+        fields: The fields that the serializer will serialize.
+    """
+    books = BookSerializer(many=True, read_only=True)
+    class Meta:
+        model = Author
+        fields = ['id', 'name', 'books']

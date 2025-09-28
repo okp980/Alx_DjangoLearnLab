@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from api.models import Book, Author
 from api.serializers import BookSerializer, AuthorSerializer
 import json
@@ -50,14 +49,10 @@ class BookAPITestCase(APITestCase):
         
         # Create API client
         self.client = APIClient()
-        
-        # Create authentication tokens
-        self.user_token, created = Token.objects.get_or_create(user=self.user)
-        self.admin_token, created = Token.objects.get_or_create(user=self.admin_user)
     
     def test_list_books_authenticated(self):
         """Test listing books with authentication"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-list')
         response = self.client.get(url)
         
@@ -98,7 +93,7 @@ class BookAPITestCase(APITestCase):
     
     def test_create_book_authenticated(self):
         """Test creating a book with authentication"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-create')
         
         data = {
@@ -134,7 +129,7 @@ class BookAPITestCase(APITestCase):
     
     def test_create_book_invalid_data(self):
         """Test creating a book with invalid data"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-create')
         
         # Test invalid publication year (too old)
@@ -159,7 +154,7 @@ class BookAPITestCase(APITestCase):
     
     def test_update_book_authenticated(self):
         """Test updating a book with authentication"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-update', kwargs={'pk': self.book1.pk})
         
         data = {
@@ -192,7 +187,7 @@ class BookAPITestCase(APITestCase):
     
     def test_delete_book_authenticated(self):
         """Test deleting a book with authentication"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-delete', kwargs={'pk': self.book1.pk})
         
         response = self.client.delete(url)
@@ -212,7 +207,7 @@ class BookAPITestCase(APITestCase):
     
     def test_delete_nonexistent_book(self):
         """Test deleting a book that doesn't exist"""
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user_token.key)
+        self.client.login(username='testuser', password='testpass123')
         url = reverse('book-delete', kwargs={'pk': 999})
         
         response = self.client.delete(url)

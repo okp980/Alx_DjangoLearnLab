@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %} {% block content %}
+<h1>Profile</h1>
+<p>Welcome, {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Bio: {{ user.bio }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

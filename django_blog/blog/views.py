@@ -2,8 +2,9 @@ from django.shortcuts import render
 from .forms import RegisterForm, ProfileForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from blog.models import Post
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -40,3 +41,24 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+    
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
+    context_object_name = 'post'
+    success_url = reverse_lazy('post_list')
+    
+class PostUpdateView(UpdateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
+    context_object_name = 'post'
+    success_url = reverse_lazy('post_list')
+    
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    fields = ['title', 'content']
+    context_object_name = 'post'
+    success_url = reverse_lazy('post_list')
